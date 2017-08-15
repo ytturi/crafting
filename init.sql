@@ -7,3 +7,17 @@ CREATE TABLE product (
     recipe_id    integer
 );
 
+-- RECIPE TABLE --
+
+CREATE TABLE recipe (
+    id           integer         NOT NULL UNIQUE PRIMARY KEY,
+    result       integer         NOT NULL REFERENCES product(id),
+    req_1        integer         NOT NULL REFERENCES product(id),
+    req_2        integer         REFERENCES product(id),
+    req_3        integer         REFERENCES product(id),
+    req_4        integer         REFERENCES product(id),
+    num_1        integer         NOT NULL DEFAULT 1,
+    num_2        integer,
+    num_3        integer,
+    num_4        integer
+);
