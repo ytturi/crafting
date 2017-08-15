@@ -1,12 +1,18 @@
 # -*- encoding utf-8 -*-
 
+_ACT_INTERACTIVE = 'interactive'
 
-available_colors = [
+_ACTIONS = [
+     (_ACT_INTERACTIVE, 'Run manager interactively')
+]
+
+
+_AVAILABLE_COLORS = [
     'black', 'red', 'green', 'yellow',
     'blue', 'purple', 'cian', 'white'
 ]
 
-colors = {
+COLORS = {
     'black': '\033[00;30m',
     'red': '\033[00;31m',
     'green': '\033[00;32m',
@@ -19,14 +25,21 @@ colors = {
 }
 
 
-def color_string (colour, text):
-    if colour in available_colors:
+def color_string(colour, text):
+    if colour in _AVAILABLE_COLORS:
         return '{}{}{}'.format(
-            colors[colour], text, colors['reset']
+            COLORS[colour], text, COLORS['reset']
         )
     else:
         return text
 
-def print_menu ():
+
+def print_menu():
     print('Hi!')
+
+
+def print_actions():
+    print('\nActions:')
+    for action, description in _ACTIONS:
+        print('\t{}\t{}'.format(action, description))
 
