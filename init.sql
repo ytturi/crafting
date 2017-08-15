@@ -3,8 +3,7 @@
 CREATE TABLE product (
     id           integer         NOT NULL UNIQUE PRIMARY KEY,
     name         varchar(40)     NOT NULL,
-    stock        integer         NOT NULL DEFAULT 0,
-    recipe_id    integer
+    stock        integer         NOT NULL DEFAULT 0
 );
 
 -- RECIPE TABLE --
@@ -21,3 +20,9 @@ CREATE TABLE recipe (
     num_3        integer,
     num_4        integer
 );
+
+-- ADD product constraint to recipe --
+
+ALTER TABLE product
+    ADD COLUMN recipe_id integer REFERENCES recipe(id);
+
