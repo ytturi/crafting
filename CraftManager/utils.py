@@ -27,3 +27,6 @@ def color_string (colour, text):
     else:
         return text
 
+def print_menu ():
+    print('Hi!')
+
