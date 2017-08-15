@@ -28,7 +28,7 @@ The interface may allow the user to:
 | Field | Type           |
 |-------|----------------|
 | id    | int            |
-| name  | text           |
+| result| :fk:product_id |
 | req.1 | :fk:product_id |
 | num.1 | int            |
 | req.2 | :fk:product_id |
