@@ -1,7 +1,9 @@
 # -*- encoding utf-8 -*-
-from tqdm import tqdm
+from __future__ import unicode_literals
 from CraftManager.utils import CraftUtils
 from CraftManager.utils import _ACT_INTERACTIVE
+from CraftManager.utils import _TASK_HELP, _TASK_EXIT
+from tqdm import tqdm
 import click
 import logging
 
