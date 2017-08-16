@@ -22,6 +22,16 @@ def read_configs(config_path):
 def start_interactive():
     utils.debug('Starting Menu display')
     utils.print_menu()
+    exit = False
+    while not exit:
+        task = click.prompt('CRAFT-MANAGER:>').lower()
+        if task in _TASK_HELP:
+            utils.print_menu()
+        elif task in _TASK_EXIT:
+            exit = True
+        else:
+            utils.error('Unknown TASK {task}'.format(**locals()))
+    utils.msg(u'Thank you for using me! \U0001f604')
 
 
 @click.command()
