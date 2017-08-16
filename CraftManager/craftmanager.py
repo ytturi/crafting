@@ -35,7 +35,7 @@ def start_interactive():
                     'If not found it is created using default values'))
 def craftmanager(action, debug_mode, show_date, config_path):
     log_level = (0 if debug_mode else 20)
-    log_format = "%(message)s"
+    log_format = '%(message)s'
     if show_date:
         log_format = '[%(asctime)s] - {}'.format(log_format)
     logging.basicConfig(
@@ -78,5 +78,9 @@ def craftmanager(action, debug_mode, show_date, config_path):
         utils.print_actions()
 
 if __name__=='__main__':
+    import sys
+    # sys.setdefaultencoding() does not exist, here!
+    reload(sys)  # Reload does the trick!
+    sys.setdefaultencoding('UTF8')
     craftmanager()
 
