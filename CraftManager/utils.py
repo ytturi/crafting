@@ -64,9 +64,11 @@ class CraftUtils:
         self.logger.error(text)
 
     def critical(self, text):
-        colored_info = self.color_string('red', 'CRITICAL')
-        text = '{colored_info}: {text}'.format(**locals())
-        self.logger.critical(text)
+        colored_info = self.color_string(
+            'red', 'CRITICAL: {text}'.format(**locals())
+        )
+        text = '{colored_info}'.format(**locals())
+        self.logger.debug(text)
 
     @staticmethod
     def color_string(colour, text):
