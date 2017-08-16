@@ -3,10 +3,31 @@ import logging
 
 
 _TASK_HELP = ['h', 'help', 'options', 'tasks']
+_TASK_INFO = ['i', 'info']
+_TASK_SHOW_STOCK = ['a', 'amount']
+_TASK_UPD_PROD = ['m', 'manual-update', 'mod']
+_TASK_UPD_STOCK = ['u', 'update']
+_TASK_SHOW_RECIPE = ['r', 'recipe', 'required', 'requirements']
+_TASK_SHOW_CRAFT = ['c', 'craft', 'check']
+_TASK_SHOW_RECURSIVE = ['rc', 'rcraft', 'rcheck',
+                    'recursive-craft', 'recursive-check']
 _TASK_EXIT = ['e', 'exit']
 _TASKS = [
-    (_TASK_HELP, 'Print all available tasks'),
-    (_TASK_EXIT, 'Exit the Craft Manager')
+    (_TASK_HELP, 'Print all available tasks', ''),
+    (_TASK_INFO, 'Show more info about a task', '<task>'),
+    (_TASK_SHOW_STOCK, 'Show the current amount of a PRODUCT', '<product>'),
+    (_TASK_UPD_PROD,
+     'Manual Update current amount of a PRODUCT',
+     '<product> <int>'),
+    (_TASK_UPD_STOCK,
+     'Update the current amount of all PRODUCTs from a FILE',
+     '<file>'),
+    (_TASK_SHOW_RECIPE, 'Show the requirements of a RECIPE', '<recipe>'),
+    (_TASK_SHOW_CRAFT, 'Show the PRODUCTS collected for a RECIPE', '<recipe>'),
+    (_TASK_SHOW_RECURSIVE,
+     'Show the recursive requirementts collected of a RECIPE',
+     '<recipe>'),
+    (_TASK_EXIT, 'Exit the Craft Manager', '')
 ]
 
 _ACT_INTERACTIVE = 'interactive'
@@ -81,10 +102,8 @@ class CraftUtils:
 
     def print_menu(self):
         msg = 'Available Tasks:\n'
-        for words, description in _TASKS:
-            msg += '>{}\n'.format(description)
-            for word in words:
-                msg += '\t{}\n'.format(word)
+        for words, description, args in _TASKS:
+            msg += '>[{0}]{1}\n\t{0} {2}\n'.format(words[1], description, args)
         self.info(msg)
     
     def print_actions(self):
