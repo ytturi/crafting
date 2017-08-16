@@ -24,7 +24,9 @@ def start_interactive():
     utils.print_menu()
     exit = False
     while not exit:
-        task = click.prompt('CRAFT-MANAGER:>').lower()
+        action = click.prompt('CRAFT-MANAGER:>').lower()
+        task = action.split()[0]
+        utils.debug('Input: "{action}"; Task: "{task}"'.format(**locals()))
         if task in _TASK_HELP:
             utils.print_menu()
         elif task in _TASK_EXIT:
