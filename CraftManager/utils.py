@@ -80,7 +80,12 @@ class CraftUtils:
             return text
 
     def print_menu(self):
-        self.msg('Hi!')
+        msg = 'Available Tasks:\n'
+        for words, description in _TASKS:
+            msg += '>{}\n'.format(description)
+            for word in words:
+                msg += '\t{}\n'.format(word)
+        self.info(msg)
     
     def print_actions(self):
         msg = '\nActions:\n'
