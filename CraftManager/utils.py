@@ -1,4 +1,6 @@
 # -*- encoding utf-8 -*-
+import logging
+
 
 _ACT_INTERACTIVE = 'interactive'
 
@@ -25,21 +27,56 @@ COLORS = {
 }
 
 
-def color_string(colour, text):
-    if colour in _AVAILABLE_COLORS:
-        return '{}{}{}'.format(
-            COLORS[colour], text, COLORS['reset']
+class CraftUtils:
+    def __init__(self, logger):
+        self.logger = logger
+
+    def msg(self, text):
+        text = '> {text}'.format(**locals())
+        self.logger.info(text)
+
+    def info(self, text):
+        colored_info = self.color_string('green', 'INFO')
+        text = '{colored_info}: {text}'.format(**locals())
+        self.logger.info(text)
+
+    def debug(self, text):
+        colored_info = self.color_string(
+            'blue', 'DEBUG: {text}'.format(**locals())
         )
-    else:
-        return text
+        text = '{colored_info}'.format(**locals())
+        self.logger.debug(text)
 
+    def warn(self, text):
+        colored_info = self.color_string('yellow', 'WARNING')
+        text = '{colored_info}: {text}'.format(**locals())
+        self.logger.warning(text)
 
-def print_menu():
-    print('Hi!')
+    def error(self, text):
+        colored_info = self.color_string('red', 'ERROR')
+        text = '{colored_info}: {text}'.format(**locals())
+        self.logger.error(text)
 
+    def critical(self, text):
+        colored_info = self.color_string('red', 'CRITICAL')
+        text = '{colored_info}: {text}'.format(**locals())
+        self.logger.critical(text)
 
-def print_actions():
-    print('\nActions:')
-    for action, description in _ACTIONS:
-        print('\t{}\t{}'.format(action, description))
+    @staticmethod
+    def color_string(colour, text):
+        if colour in _AVAILABLE_COLORS:
+            return '{}{}{}'.format(
+                COLORS[colour], text, COLORS['reset']
+            )
+        else:
+            return text
+
+    def print_menu(self):
+        self.msg('Hi!')
+    
+    def print_actions(self):
+        msg = '\nActions:\n'
+        for action, description in _ACTIONS:
+            msg += '\t{}\t{}\n'.format(action, description)
+        self.info(msg)
 
