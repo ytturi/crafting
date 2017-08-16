@@ -6,6 +6,17 @@ import click
 import logging
 
 
+def read_configs(config_path):
+    utils.warn('Not implemented yet!')
+    return {
+        'db-host': 'localhost',
+        'db-port': 5432,
+        'db-user': 'test',
+        'db-pass': 'test',
+        'db-name': 'test',
+    }
+
+
 def start_interactive():
     utils.debug('Starting Menu display')
     utils.print_menu()
@@ -17,7 +28,10 @@ def start_interactive():
               default=False, help='Enable debug prints')
 @click.option('--date/--no-date', 'show_date', flag_value=True, 
               default=False, help='Enable date on prints')
-def craftmanager(action, debug_mode, show_date):
+@click.option('--config', 'config_path', default='craftmanager.conf',
+              help=('Path for the config file.'
+                    'If not found it is created using default values'))
+def craftmanager(action, debug_mode, show_date, config_path):
     log_level = (0 if debug_mode else 20)
     log_format = "%(message)s"
     if show_date:
@@ -29,13 +43,25 @@ def craftmanager(action, debug_mode, show_date):
     logger = logging.getLogger(__name__)
     global utils
     utils = CraftUtils(logger)
+    configs = read_configs(config_path)
+    dbname = configs['db-name']
+    dbhost = configs['db-host']
+    dbport = configs['db-port']
+    dbuser = configs['db-user']
+    dbpass = configs['db-pass']
     utils.debug(
         'INIT STATS:\n'    
         'ACTION: \t"{action}"\n'
         'LOGGER:\n'
         '|  log_level:\t{log_level}\n'
-        '|  log_format:\t"{log_format}"'
-        ''.format(
+        '|  log_format:\t"{log_format}"\n'
+        'CONFIG_FILE: \t"{config_path}"\n'
+        '|  db-name:\t{dbname}\n'
+        '|  db-host:\t{dbhost}\n'
+        '|  db-port:\t{dbport}\n'
+        '|  db-user:\t{dbuser}\n'
+        '|  db-pass:\t{dbpass}\n'
+        '<----INIT STATS---->'.format(
             **locals()
         )
     )
