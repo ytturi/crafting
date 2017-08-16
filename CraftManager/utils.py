@@ -2,8 +2,14 @@
 import logging
 
 
-_ACT_INTERACTIVE = 'interactive'
+_TASK_HELP = ['h', 'help', 'options', 'tasks']
+_TASK_EXIT = ['e', 'exit']
+_TASKS = [
+    (_TASK_HELP, 'Print all available tasks'),
+    (_TASK_EXIT, 'Exit the Craft Manager')
+]
 
+_ACT_INTERACTIVE = 'interactive'
 _ACTIONS = [
      (_ACT_INTERACTIVE, 'Run manager interactively')
 ]
