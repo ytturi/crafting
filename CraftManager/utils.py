@@ -103,7 +103,8 @@ class CraftUtils:
     def print_menu(self):
         msg = 'Available Tasks:\n'
         for words, description, args in _TASKS:
-            msg += '>[{0}]{1}\n\t{0} {2}\n'.format(words[1], description, args)
+            tag = self.color_string('yellow', words[1])
+            msg += '>[{0}]{1}\n\t{0} {2}\n'.format(tag, description, args)
         self.info(msg)
     
     def print_actions(self):
