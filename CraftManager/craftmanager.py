@@ -23,17 +23,19 @@ def start_interactive():
     utils.debug('Starting Menu display')
     utils.print_menu()
     exit = False
-    while not exit:
-        action = click.prompt('CRAFT-MANAGER:>').lower()
-        task = action.split()[0]
-        utils.debug('Input: "{action}"; Task: "{task}"'.format(**locals()))
-        if task in _TASK_HELP:
-            utils.print_menu()
-        elif task in _TASK_EXIT:
-            exit = True
-        else:
-            utils.error('Unknown TASK {task}'.format(**locals()))
-    utils.msg(u'Thank you for using me! \U0001f604')
+    try:
+        while not exit:
+            action = click.prompt('CRAFT-MANAGER:>').lower()
+            task = action.split()[0]
+            utils.debug('Input: "{action}"; Task: "{task}"'.format(**locals()))
+            if task in _TASK_HELP:
+                utils.print_menu()
+            elif task in _TASK_EXIT:
+                exit = True
+            else:
+                utils.error('Unknown TASK {task}'.format(**locals()))
+    finally:
+        utils.msg(u'Thank you for using me! \U0001f604')
 
 
 @click.command()
