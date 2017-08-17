@@ -1,15 +1,17 @@
 # -*- encoding utf-8 -*-
 from __future__ import unicode_literals
-from CraftManager.utils import CraftUtils
-from CraftManager.utils import _ACT_INTERACTIVE
-from CraftManager.utils import _TASK_HELP, _TASK_EXIT
+from CraftManager.manager import CraftManager
+from CraftManager.manager import _ACT_INTERACTIVE
+from CraftManager.manager import _TASK_HELP, _TASK_EXIT
+from CraftManager.manager import _RES_OK, _RES_WARN, _RES_ERR
+from CraftManager.manager import _RES_CRIT, _RES_EXIT
 from tqdm import tqdm
 import click
 import logging
 
 
 def read_configs(config_path):
-    utils.warn('Not implemented yet!')
+    manager.warn('Not implemented yet!')
     return {
         'db-host': 'localhost',
         'db-port': 5432,
@@ -20,22 +22,21 @@ def read_configs(config_path):
 
 
 def start_interactive():
-    utils.debug('Starting Menu display')
-    utils.print_menu()
-    exit = False
+    manager.print_menu()
+    res = 0
     try:
-        while not exit:
-            action = click.prompt('CRAFT-MANAGER:>').lower()
-            task = action.split()[0]
-            utils.debug('Input: "{action}"; Task: "{task}"'.format(**locals()))
-            if task in _TASK_HELP:
-                utils.print_menu()
-            elif task in _TASK_EXIT:
-                exit = True
-            else:
-                utils.error('Unknown TASK {task}'.format(**locals()))
+        while not res == _RES_EXIT:
+            action = click.prompt('CRAFT-MANAGER:>').split()
+            if not action:
+                continue
+            task = action[0].lower()
+            if not manager.valid_taskname(task):
+                manager.error('Task "{task}" does not exist!'.format(**locals()))
+                continue
+            method = manager.run_task(task)
+            res = method(task, action[1:] or [])
     finally:
-        utils.msg(u'Thank you for using me! \U0001f604')
+        manager.msg(u'Thank you for using me! \U0001f604')
 
 
 @click.command()
@@ -47,7 +48,7 @@ def start_interactive():
 @click.option('--config', 'config_path', default='craftmanager.conf',
               help=('Path for the config file.'
                     'If not found it is created using default values'))
-def craftmanager(action, debug_mode, show_date, config_path):
+def initialize(action, debug_mode, show_date, config_path):
     log_level = (0 if debug_mode else 20)
     log_format = '%(message)s'
     if show_date:
@@ -57,15 +58,15 @@ def craftmanager(action, debug_mode, show_date, config_path):
         datefmt="%Y-%m-%d %H:%M:%S", level=log_level
     )
     logger = logging.getLogger(__name__)
-    global utils
-    utils = CraftUtils(logger)
+    global manager
+    manager = CraftManager(logger)
     configs = read_configs(config_path)
     dbname = configs['db-name']
     dbhost = configs['db-host']
     dbport = configs['db-port']
     dbuser = configs['db-user']
     dbpass = configs['db-pass']
-    utils.debug(
+    manager.debug(
         'INIT STATS:\n'    
         'ACTION: \t"{action}"\n'
         'LOGGER:\n'
@@ -85,16 +86,16 @@ def craftmanager(action, debug_mode, show_date, config_path):
         start_interactive()
     else:
         if action:
-            utils.warn(
+            manager.warn(
                 'Action {} Not implemented yet!'.format(action)
             )
-        utils.error('No action provided!')
-        utils.print_actions()
+        manager.error('No action provided!')
+        manager.print_actions()
 
 if __name__=='__main__':
     import sys
     # sys.setdefaultencoding() does not exist, here!
     reload(sys)  # Reload does the trick!
     sys.setdefaultencoding('UTF8')
-    craftmanager()
+    initialize()
 
