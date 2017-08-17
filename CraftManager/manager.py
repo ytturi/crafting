@@ -135,13 +135,34 @@ class CraftManager:
             self.error('Task "{}" does not exist'.format(task_name))
             return self.task_error
         self.debug('Running task "{}"'.format(task_name))
-        if task_name == _TASK_HELP:
-            return self.print_menu
-        elif task_name == _TASK_EXIT:
+        if task_name in _TASK_HELP:
+            return self.task_print_menu
+        elif task_name in _TASK_INFO:
+            return self.task_info
+        elif task_name in _TASK_EXIT:
             return self.task_exit
         else:
             return self.task_not_implemented
-     
+
+    def task_print_menu(self, taskname, args):
+        self.print_menu()
+        return _RES_OK
+
+    def task_info(self, taskname, args):
+        if not args:
+            self.error('No task provided to get more info')
+        task = args[0]
+        for words, descr, pars in _TASKS:
+            if task in words:
+                str_pars = '\n'.join(
+                    ['\t{word} {pars}'.format(**locals()) for word in words]
+                )
+                self.info(
+                    '{descr}\nAvailable tags:\n'
+                    '{str_pars}'.format(**locals())
+                )
+                break
+
     def task_error(self, taskname, args):
         self.debug(
             'Default error for TASK: [{taskname}|{args}]'.format(**locals())
