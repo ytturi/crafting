@@ -139,6 +139,8 @@ class CraftManager:
             return self.task_print_menu
         elif task_name in _TASK_INFO:
             return self.task_info
+        elif task_name in _TASK_SHOW_STOCK:
+            return self.task_stock
         elif task_name in _TASK_EXIT:
             return self.task_exit
         else:
@@ -151,6 +153,7 @@ class CraftManager:
     def task_info(self, taskname, args):
         if not args:
             self.error('No task provided to get more info')
+            return _RES_ERR
         task = args[0]
         for words, descr, pars in _TASKS:
             if task in words:
@@ -161,7 +164,21 @@ class CraftManager:
                     '{descr}\nAvailable tags:\n'
                     '{str_pars}'.format(**locals())
                 )
-                break
+                return _RES_OK
+        self.warn('Task {task} not found to get info'.format(**locals()))
+        return _RES_WARN
+
+    def task_stock(self, taskname, args):
+        if not args:
+            self.error('No <product name> provided to check amount')
+            return _RES_ERR
+        product = ' '.join(args)  # Concat product name
+        self.debug('Getting amount of product "{product}"'.format(**locals()))
+        # TODO: Implement Database Getter for product
+        amount = 0
+        colored_name = color_string('yellow', product)
+        self.info('{colored_name}:\t{amount}'.format(**locals()))
+        return _RES_OK
 
     def task_error(self, taskname, args):
         self.debug(
