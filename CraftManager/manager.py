@@ -181,6 +181,8 @@ class CraftManager:
             return self.task_info
         elif task_name in _TASK_SHOW_STOCK:
             return self.task_stock
+        elif task_name in _TASK_UPD_PROD:
+            return self.task_single_update
         elif task_name in _TASK_EXIT:
             return self.task_exit
         else:
@@ -221,6 +223,33 @@ class CraftManager:
         amount = prod_obj.stock
         colored_name = color_string('yellow', product)
         self.info('{colored_name}:\t{amount}'.format(**locals()))
+        return _RES_OK
+
+    def task_single_update(self, taskname, args):
+        if not args or len(args) < 2:
+            self.error('No <product name> or <amount> provided to update amount')
+            return _RES_ERR
+        product = ' '.join(args[:1])  # Concat product name
+        try:
+            amount = int(args[-1])
+        except ValueError:
+            self.error('Amount to update PRODUCT not sepecified as INTEGER')
+            return _RES_ERR
+        self.debug('Getting product "{product}" to update amount with {amount}'
+                   ''.format(**locals()))
+        prod_obj = self.get_product(product)
+        if prod_obj is None or not prod_obj:
+            self.error('Could not find "{product}" on database')
+            return _RES_ERR
+        old_amount = prod_obj.stock
+        self.debug('Updating stock amount {old_amount} -> {amount}'
+                   ''.format(**locals()))
+        prod_obj._replace(stock = amount)
+        if self.write_product(prod_obj):
+            self.error('Failed on write of {product} in database'
+                       ''.format(**locals()))
+            return _RES_ERR
+        self.info('Updated "{product}" stock {old_amount} -> {amount}')
         return _RES_OK
 
     def task_error(self, taskname, args):
