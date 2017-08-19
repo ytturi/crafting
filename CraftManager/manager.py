@@ -214,8 +214,11 @@ class CraftManager:
             return _RES_ERR
         product = ' '.join(args)  # Concat product name
         self.debug('Getting amount of product "{product}"'.format(**locals()))
-        # TODO: Implement Database Getter for product
-        amount = 0
+        prod_obj = self.get_product(product)
+        if prod_obj is None or not prod_obj:
+            self.error('Could not find "{product}" on database')
+            return _RES_ERR
+        amount = prod_obj.stock
         colored_name = color_string('yellow', product)
         self.info('{colored_name}:\t{amount}'.format(**locals()))
         return _RES_OK
