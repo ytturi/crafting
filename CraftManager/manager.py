@@ -1,4 +1,5 @@
 # -*- encoding utf-8 -*-
+from collections import namedtuple
 import logging
 
 _RES_OK = 0
@@ -57,6 +58,22 @@ COLORS = {
     'white': '\033[00;37m',
     'reset': '\033[00m'
 }
+
+
+_MODEL_PRODUCT = namedtuple(
+    'product_obj', [
+        'self_id', 'name', 'stock', 'recipe_id'
+    ]
+)
+_MODEL_RECIPE = namedtuple(
+    'recipe_obj', [
+        'self_id', 'result_id',
+        'requirement_id_1', 'requirement_amount_1'
+        'requirement_id_2', 'requirement_amount_2'
+        'requirement_id_3', 'requirement_amount_3'
+        'requirement_id_4', 'requirement_amount_4'
+    ]
+)
 
 
 def color_string(colour, text):
