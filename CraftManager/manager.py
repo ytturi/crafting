@@ -137,6 +137,29 @@ class CraftManager:
             msg += '\t{}\t{}\n'.format(action, description)
         self.info(msg)
 
+    # Database methods
+    def get_product(self, product_name):
+        """
+        Returns a named tuple with the data of a product
+        NamedTuple:
+            id: INT
+            name: STR
+            stock: INT
+            recipe_id: INT
+        """
+        self.debug('Getting PRODUCT "{product_name}" from database'
+                   ''.format(**locals()))
+        #TODO: get PRODUCT from database using psycopg2
+        prod_obj = _MODEL_PRODUCT(self_id=0, name='demo', stock=0, recipe_id=0)
+        return prod_obj
+
+    def write_product(self, product_obj):
+        if not isinstance(product_obj, _MODEL_PRODUCT):
+            self.error('Trying to WRITE on PRODUCT without a MODEL_PRODUCT')
+            return -1
+        #TODO: update PRODUCT on database using psycopg2 and product_obj
+        return 0
+
     # Task processing
     def valid_taskname(self, taskname):
         for tags, descr, args in _TASKS:
