@@ -137,23 +137,31 @@ class CraftManager:
             msg += '\t{}\t{}\n'.format(action, description)
         self.info(msg)
 
-    def print_recipe(self, recipe_obj, stock=False, recursive=False):
+    def print_recipe(self, recipe, stock=False, recursive=False):
         result = self.get_product(product_id=recipe.result_id)
         msg = 'RECIPE for "{}"\n'.format(color_string('yellow', result.name))
         for req_num in range(1,5):
-            req = self.get_product(
-                product_id = getattr(recipe, 'requirement_id_{req_num}'
-                                     ''.format(**locals()))
-            )
+            req_id = getattr(recipe, 'requirement_id_{req_num}'
+                             ''.format(**locals()))
+            if not req_id:
+                msg += '|-> ----\t{}--\n'.format(
+                    '' if not stock else '--/'
+                )
+                continue
+            req = self.get_product(product_id=req_id)
             if not req:
                 self.error('Could not find requirement {req_num}'
                            ' for recipe {recipe.id}'.format(**locals()))
             else:
                 amount = getattr(recipe, 'requirement_amount_{req_num}'
                                  ''.format(**locals()))
-                msg += '| {req.name}\t{amount}\n'.format(**locals())
-        self.info(msg)
-
+                if stock:
+                    msg += '|-> {req.name}\t{req.stock}/{amount}\n'.format(
+                           **locals())
+                else:
+                    msg += '|-> {req.name}\t{amount}\n'.format(**locals())
+        msg += '*'
+        return msg
 
     # Database methods
     def get_recipe(self, recipe_id):
@@ -178,9 +186,9 @@ class CraftManager:
             return False
         #TODO: get RECIPE from database using psycopg2
         recipe_obj = _MODEL_RECIPE(
-            self_id=1, result_id=1, requirement_id_1=1, requirement_amount_1=0,
-            requirement_id_2=1, requirement_amount_2=0, requirement_id_3=1,
-            requirement_amount_3=0, requirement_id_4=1, requirement_amount_4=0
+            self_id=1, result_id=1, requirement_id_1=1, requirement_amount_1=1,
+            requirement_id_2=2, requirement_amount_2=1, requirement_id_3=3,
+            requirement_amount_3=1, requirement_id_4=False, requirement_amount_4=False
         )
         return recipe_obj
         
@@ -331,7 +339,7 @@ class CraftManager:
             self.error('Could not find recipe "{prod_obj.recipe_id}"'
                        ' for product "{prod_obj.name}"'.format(**locals()))
             return _RES_ERR
-        self.print_recipe(recipe)
+        self.info(self.print_recipe(recipe))
         return _RES_OK
 
     def task_error(self, taskname, args):
