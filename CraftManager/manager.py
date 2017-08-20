@@ -160,9 +160,9 @@ class CraftManager:
             return False
         #TODO: get RECIPE from database using psycopg2
         recipe_obj = _MODEL_RECIPE(
-            self_id=0, result_id=0, requirement_id_1=0, requirement_amount_1=0,
-            requirement_id_2=0, requirement_amount_2=0, requirement_id_3=0,
-            requirement_amount_3=0, requirement_id_4=0, requirement_amount_4=0
+            self_id=1, result_id=1, requirement_id_1=1, requirement_amount_1=0,
+            requirement_id_2=1, requirement_amount_2=0, requirement_id_3=1,
+            requirement_amount_3=0, requirement_id_4=1, requirement_amount_4=0
         )
         return recipe_obj
         
@@ -181,7 +181,7 @@ class CraftManager:
         self.debug('Getting PRODUCT "{}" from database'
                    ''.format(product_name or product_id))
         #TODO: get PRODUCT from database using psycopg2
-        prod_obj = _MODEL_PRODUCT(self_id=0, name='demo', stock=0, recipe_id=0)
+        prod_obj = _MODEL_PRODUCT(self_id=1, name='demo', stock=0, recipe_id=1)
         return prod_obj
 
     def write_product(self, product_obj):
