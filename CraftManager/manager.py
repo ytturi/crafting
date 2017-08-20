@@ -46,7 +46,6 @@ _AVAILABLE_COLORS = [
     'black', 'red', 'green', 'yellow',
     'blue', 'purple', 'cian', 'white'
 ]
-
 COLORS = {
     'black': '\033[00;30m',
     'red': '\033[00;31m',
@@ -58,6 +57,8 @@ COLORS = {
     'white': '\033[00;37m',
     'reset': '\033[00m'
 }
+_CHAR_OK = u'\u2713'
+_CHAR_FAIL = u'\u2717'
 
 
 _MODEL_PRODUCT = namedtuple(
@@ -139,7 +140,9 @@ class CraftManager:
 
     def print_recipe(self, recipe, stock=False, recursive=False):
         result = self.get_product(product_id=recipe.result_id)
-        msg = 'RECIPE for "{}"\n'.format(color_string('yellow', result.name))
+        msg = '{}\n'.format(color_string('yellow', result.name))
+        num_required = 0
+        num_stock = 0
         for req_num in range(1,5):
             req_id = getattr(recipe, 'requirement_id_{req_num}'
                              ''.format(**locals()))
@@ -158,9 +161,28 @@ class CraftManager:
                 if stock:
                     msg += '|-> {req.name}\t{req.stock}/{amount}\n'.format(
                            **locals())
+                    num_required += amount
+                    num_stock += req.stock
                 else:
                     msg += '|-> {req.name}\t{amount}\n'.format(**locals())
-        msg += '*'
+        if not stock and not recursive:
+            msg += '*'
+        else:
+            check = _CHAR_OK
+            cross = _CHAR_FAIL
+            stock_percent = 100*num_stock/num_required
+            base_req_msg = 'Requirements: {}%'.format(stock_percent)
+            if stock_percent >= 100:
+                base_req_msg = '{check} {base_req_msg}'.format(**locals())
+                base_req_color = 'green'
+            else:
+                base_req_msg = '{cross} {base_req_msg}'.format(**locals())
+                if stock_percent >= 50:
+                    base_req_color = 'yellow'
+                else:
+                    base_req_color = 'red'
+            base_req_msg = color_string(base_req_color, base_req_msg)
+            msg += base_req_msg
         return msg
 
     # Database methods
@@ -249,6 +271,8 @@ class CraftManager:
             return self.task_single_update
         elif task_name in _TASK_SHOW_RECIPE:
             return self.task_show_recipe
+        elif task_name in _TASK_SHOW_CRAFT:
+            return self.task_craft_recipe
         elif task_name in _TASK_EXIT:
             return self.task_exit
         else:
@@ -339,7 +363,7 @@ class CraftManager:
             self.error('Could not find recipe "{prod_obj.recipe_id}"'
                        ' for product "{prod_obj.name}"'.format(**locals()))
             return _RES_ERR
-        self.info(self.print_recipe(recipe))
+        self.info('RECIPE for '+self.print_recipe(recipe))
         return _RES_OK
 
     def task_error(self, taskname, args):
