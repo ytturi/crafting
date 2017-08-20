@@ -28,11 +28,11 @@ _TASKS = [
     (_TASK_UPD_STOCK,
      'Update the current amount of all PRODUCTs from a FILE',
      '<file>'),
-    (_TASK_SHOW_RECIPE, 'Show the requirements of a RECIPE', '<recipe>'),
-    (_TASK_SHOW_CRAFT, 'Show the PRODUCTS collected for a RECIPE', '<recipe>'),
+    (_TASK_SHOW_RECIPE, 'Show the requirements of a RECIPE', '<product>'),
+    (_TASK_SHOW_CRAFT, 'Show the PRODUCTS collected for a RECIPE', '<product>'),
     (_TASK_SHOW_RECURSIVE,
      'Show the recursive requirementts collected of a RECIPE',
-     '<recipe>'),
+     '<product>'),
     (_TASK_EXIT, 'Exit the Craft Manager', '')
 ]
 
@@ -221,6 +221,8 @@ class CraftManager:
             return self.task_stock
         elif task_name in _TASK_UPD_PROD:
             return self.task_single_update
+        elif task_name in _TASK_SHOW_RECIPE:
+            return self.task_show_recipe
         elif task_name in _TASK_EXIT:
             return self.task_exit
         else:
