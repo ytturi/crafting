@@ -292,6 +292,40 @@ class CraftManager:
                   ''.format(**locals()))
         return _RES_OK
 
+    #TODO: task_mass_update
+    # - From file (CSV)
+    # - From API?
+    
+    def task_show_recipe(self, taskname, args):
+        if not args:
+            self.error('No <product name> provided to check amount')
+            return _RES_ERR
+        product = ' '.join(args)  # Concat product name
+        prod_obj = self.get_product(product_name=product)
+        if not prod_obj:
+            self.error('Could not find product "{product}" on database'
+                       ''.format(**locals()))
+            return _RES_ERR
+        recipe = self.get_recipe(prod_obj.recipe_id)
+        if not recipe:
+            self.error('Could not find recipe "{prod_obj.recipe_id}"'
+                       ' for product "{prod_obj.name}"'.format(**locals()))
+            return _RES_ERR
+        msg = 'RECIPE for "{}"\n'.format(color_string('yellow', prod_obj.name))
+        for req_num in range(1,5):
+            req = self.get_product(
+                product_id = getattr(recipe, 'requirement_id_{req_num}'
+                                     ''.format(**locals()))
+            )
+            if not req:
+                self.error('Could not find requirement {req_num}'
+                           ' for recipe {recipe.id}'.format(**locals()))
+            else:
+                amount = getattr(recipe, 'requirement_amount_{req_num}'
+                                 ''.format(**locals()))
+                msg += '| {req.name}\t{amount}\n'.format(**locals())
+        self.info(msg)
+
     def task_error(self, taskname, args):
         self.debug(
             'Default error for TASK: [{taskname}|{args}]'.format(**locals())
