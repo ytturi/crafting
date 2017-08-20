@@ -254,7 +254,7 @@ class CraftManager:
             return _RES_ERR
         product = ' '.join(args)  # Concat product name
         self.debug('Getting amount of product "{product}"'.format(**locals()))
-        prod_obj = self.get_product(product)
+        prod_obj = self.get_product(product_name=product)
         if prod_obj is None or not prod_obj:
             self.error('Could not find "{product}" on database')
             return _RES_ERR
@@ -275,7 +275,7 @@ class CraftManager:
             return _RES_ERR
         self.debug('Getting product "{product}" to update amount with {amount}'
                    ''.format(**locals()))
-        prod_obj = self.get_product(product)
+        prod_obj = self.get_product(product_name=product)
         if prod_obj is None or not prod_obj:
             self.error('Could not find "{product}" on database'
                        ''.format(**locals()))
