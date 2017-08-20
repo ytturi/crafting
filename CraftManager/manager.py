@@ -68,10 +68,10 @@ _MODEL_PRODUCT = namedtuple(
 _MODEL_RECIPE = namedtuple(
     'recipe_obj', [
         'self_id', 'result_id',
-        'requirement_id_1', 'requirement_amount_1'
-        'requirement_id_2', 'requirement_amount_2'
-        'requirement_id_3', 'requirement_amount_3'
-        'requirement_id_4', 'requirement_amount_4'
+        'requirement_id_1', 'requirement_amount_1',
+        'requirement_id_2', 'requirement_amount_2',
+        'requirement_id_3', 'requirement_amount_3',
+        'requirement_id_4', 'requirement_amount_4',
     ]
 )
 
