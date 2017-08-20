@@ -1,4 +1,13 @@
+sudo: false
 language: python
+python:
+  - "2.7"
 install:
-  - apt-get install -y python-dev python-pip
+  - pip install .
   - pip install -r requirements-dev.txt
+  - pip install coveralls
+script:
+  - echo "mamba --enable-coverage"
+after_success:
+  - echo "coveralls"
+  - echo "coverage report"
