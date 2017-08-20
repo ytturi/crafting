@@ -249,17 +249,19 @@ class CraftManager:
                    ''.format(**locals()))
         prod_obj = self.get_product(product)
         if prod_obj is None or not prod_obj:
-            self.error('Could not find "{product}" on database')
+            self.error('Could not find "{product}" on database'
+                       ''.format(**locals()))
             return _RES_ERR
         old_amount = prod_obj.stock
         self.debug('Updating stock amount {old_amount} -> {amount}'
                    ''.format(**locals()))
-        prod_obj._replace(stock = amount)
+        prod_obj = prod_obj._replace(stock = amount)
         if self.write_product(prod_obj):
             self.error('Failed on write of {product} in database'
                        ''.format(**locals()))
             return _RES_ERR
-        self.info('Updated "{product}" stock {old_amount} -> {amount}')
+        self.info('Updated "{prod_obj.name}" stock {old_amount} -> {prod_obj.stock}'
+                  ''.format(**locals()))
         return _RES_OK
 
     def task_error(self, taskname, args):
