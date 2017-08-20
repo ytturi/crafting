@@ -138,7 +138,7 @@ class CraftManager:
         self.info(msg)
 
     # Database methods
-    def get_product(self, product_name):
+    def get_product(self, product_name=False, product_id=False):
         """
         Returns a named tuple with the data of a product
         NamedTuple:
@@ -147,13 +147,23 @@ class CraftManager:
             stock: INT
             recipe_id: INT
         """
-        self.debug('Getting PRODUCT "{product_name}" from database'
-                   ''.format(**locals()))
+        if not product_name and not product_id:
+            self.error("Can't look for a PRODUCT without NAME or ID")
+            return False
+        self.debug('Getting PRODUCT "{}" from database'
+                   ''.format(product_name or product_id))
         #TODO: get PRODUCT from database using psycopg2
         prod_obj = _MODEL_PRODUCT(self_id=0, name='demo', stock=0, recipe_id=0)
         return prod_obj
 
     def write_product(self, product_obj):
+        """
+        Writes a PRODUCT in the DATABASE
+        - PRODUCT must exist with the same ID
+        :product_obj: The PRODUCT to UPDATE
+            :type: _MODEL_PRODUCT
+        :returns: 0 if WRITE, -1 if ERROR
+        """
         if not isinstance(product_obj, _MODEL_PRODUCT):
             self.error('Trying to WRITE on PRODUCT without a MODEL_PRODUCT')
             return -1
