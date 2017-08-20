@@ -138,13 +138,41 @@ class CraftManager:
         self.info(msg)
 
     # Database methods
+    def get_recipe(self, recipe_id):
+        """
+        Returns a named tuple with the data of a recipe
+        NamedTuple _MODEL_RECIPE:
+            self_id:              INT
+            result_id:            INT
+            requirement_id_1:     INT
+            requirement_amount_1: INT
+            requirement_id_2:     INT
+            requirement_amount_2: INT
+            requirement_id_3:     INT
+            requirement_amount_3: INT
+            requirement_id_4:     INT
+            requirement_amount_4: INT
+        """
+        try:
+            recipe_id = int(recipe_id)
+        except ValueError:
+            self.error('Trying to get RECIPE without ID')
+            return False
+        #TODO: get RECIPE from database using psycopg2
+        recipe_obj = _MODEL_RECIPE(
+            self_id=0, result_id=0, requirement_id_1=0, requirement_amount_1=0,
+            requirement_id_2=0, requirement_amount_2=0, requirement_id_3=0,
+            requirement_amount_3=0, requirement_id_4=0, requirement_amount_4=0
+        )
+        return recipe_obj
+        
     def get_product(self, product_name=False, product_id=False):
         """
         Returns a named tuple with the data of a product
-        NamedTuple:
-            id: INT
-            name: STR
-            stock: INT
+        NamedTuple _MODEL_PRODUCT:
+            self_id:   INT
+            name:      STR
+            stock:     INT
             recipe_id: INT
         """
         if not product_name and not product_id:
