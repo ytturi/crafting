@@ -365,6 +365,24 @@ class CraftManager:
             return _RES_ERR
         self.info('RECIPE for '+self.print_recipe(recipe))
         return _RES_OK
+    
+    def task_craft_recipe(self, taskname, args):
+        if not args:
+            self.error('No <product name> provided to check amount')
+            return _RES_ERR
+        product = ' '.join(args)  # Concat product name
+        prod_obj = self.get_product(product_name=product)
+        if not prod_obj:
+            self.error('Could not find product "{product}" on database'
+                       ''.format(**locals()))
+            return _RES_ERR
+        recipe = self.get_recipe(prod_obj.recipe_id)
+        if not recipe:
+            self.error('Could not find recipe "{prod_obj.recipe_id}"'
+                       ' for product "{prod_obj.name}"'.format(**locals()))
+            return _RES_ERR
+        self.info('CRAFTING '+self.print_recipe(recipe, stock=True))
+        return _RES_OK
 
     def task_error(self, taskname, args):
         self.debug(
