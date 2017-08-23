@@ -7,7 +7,7 @@ install:
   - pip install -r requirements-dev.txt
   - pip install coveralls
 script:
-  - echo "mamba --enable-coverage"
+  - mamba --enable-coverage  --format documentation
 after_success:
-  - echo "coveralls"
-  - echo "coverage report"
+  - coveralls
+  - coverage report
