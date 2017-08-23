@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/ytturi/crafting.svg?branch=master)](https://travis-ci.org/ytturi/crafting)
+[![Coverage Status](https://coveralls.io/repos/github/ytturi/crafting/badge.svg?branch=master)](https://coveralls.io/github/ytturi/crafting?branch=master)
+
 # Crafting
 This repo will try to talk with a PostgreSQL database to check and show requirements and materials to craft an item.
 Based on a simple interface and backend.
